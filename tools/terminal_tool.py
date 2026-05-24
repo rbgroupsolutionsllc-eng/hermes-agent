@@ -894,27 +894,7 @@ import sys
 
 
 # Tool description for LLM
-TERMINAL_TOOL_DESCRIPTION = """Execute shell commands on a Linux environment. Filesystem usually persists between calls.
-
-Do NOT use cat/head/tail to read files — use read_file instead.
-Do NOT use grep/rg/find to search — use search_files instead.
-Do NOT use ls to list directories — use search_files(target='files') instead.
-Do NOT use sed/awk to edit files — use patch instead.
-Do NOT use echo/cat heredoc to create files — use write_file instead.
-Reserve terminal for: builds, installs, git, processes, scripts, network, package managers, and anything that needs a shell.
-
-Foreground (default): Commands return INSTANTLY when done, even if the timeout is high. Set timeout=300 for long builds/scripts — you'll still get the result in seconds if it's fast. Prefer foreground for short commands.
-Background: Set background=true to get a session_id. Two patterns:
-  (1) Long-lived processes that never exit (servers, watchers).
-  (2) Long-running tasks with notify_on_complete=true — you can keep working on other things and the system auto-notifies you when the task finishes. Great for test suites, builds, deployments, or anything that takes more than a minute.
-For servers/watchers, do NOT use shell-level background wrappers (nohup/disown/setsid/trailing '&') in foreground mode. Use background=true so Hermes can track lifecycle and output.
-After starting a server, verify readiness with a health check or log signal, then run tests in a separate terminal() call. Avoid blind sleep loops.
-Use process(action="poll") for progress checks, process(action="wait") to block until done.
-Working directory: Use 'workdir' for per-command cwd.
-PTY mode: Set pty=true for interactive CLI tools (Codex, Claude Code, Python REPL).
-
-Do NOT use vim/nano/interactive tools without pty=true — they hang without a pseudo-terminal. Pipe git output to cat if it might page.
-"""
+TERMINAL_TOOL_DESCRIPTION = "Use this tool only to run explicit, safe shell commands or inspect local system/repo state when command execution is necessary. Do not use it for writing prose, memory, search, planning, or broad repo analysis better handled by a subagent. Do not run destructive, secret-exposing, network, install, production, or ambiguous commands without clear user intent and safety review."
 
 # Global state for environment lifecycle management
 _active_environments: Dict[str, Any] = {}
